@@ -1,0 +1,19 @@
+﻿<Window x:Class="ZAxis_CreditCardStatement_Transform.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ZAxis_CreditCardStatement_Transform"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Button x:Name="btnLoadAndTransform" Content="Load &amp; Transform" HorizontalAlignment="Left" Margin="90,330,0,0" VerticalAlignment="Top" Width="195" Height="35" Click="btnLoadAndTransform_Click"/>
+        <Label Content="Z-Axis Connector Company" HorizontalAlignment="Left" Margin="65,24,0,0" VerticalAlignment="Top" Width="245" Height="35" FontSize="18" FontWeight="Bold"/>
+        <Label Content="Credit Card Statement Sage Transform" HorizontalAlignment="Left" Margin="67,56,0,0" VerticalAlignment="Top" Width="288" FontSize="16" FontStyle="Italic"/>
+        <GroupBox Header="File Info" Margin="40,114,445,30"/>
+        <TextBox x:Name="txtBoxCSVFileName" Margin="165,174,515,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top"/>
+        <Label Content="CSV File Name" Margin="78,168,629,0" VerticalAlignment="Top"/>
+        <Button x:Name="btnBrowseFiles" Content="Browse Files" HorizontalAlignment="Left" Margin="98,201,0,0" VerticalAlignment="Top" Width="190" Click="btnBrowseFiles_Click"/>
+
+    </Grid>
+</Window>
