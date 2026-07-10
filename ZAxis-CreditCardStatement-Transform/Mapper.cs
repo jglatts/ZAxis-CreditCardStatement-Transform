@@ -1,4 +1,13 @@
-﻿using System;
+﻿/******************************************************************************
+ * ZAxis Credit Card Statement Transform
+ *
+ * Provides merchant description to General Ledger (GL) account mapping used
+ * to automatically categorize transactions during the CSV transformation
+ * process.
+ *
+ * Author: John Glatts
+ ******************************************************************************/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 

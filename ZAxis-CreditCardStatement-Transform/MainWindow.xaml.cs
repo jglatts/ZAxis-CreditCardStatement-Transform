@@ -1,4 +1,13 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿/******************************************************************************
+ * ZAxis Credit Card Statement Transform
+ *
+ * Main application window responsible for loading credit card statement CSV
+ * files, transforming the data into the required output formats, and
+ * generating files for review and Sage import.
+ *
+ * Author: John Glatts
+ ******************************************************************************/
+using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.IO;
@@ -44,10 +53,7 @@ namespace ZAxis_CreditCardStatement_Transform
                 return;
             }
 
-            if (!transformCSV())
-            {
-                MessageBox.Show($"Unable to transform the CSV file.");
-            }
+            transformCSV();
         }
 
         // works but hardcoded for the specific CSV file format, will need to be updated for other formats
@@ -90,7 +96,7 @@ namespace ZAxis_CreditCardStatement_Transform
                     if (transformedRow.Count <= 3)
                     {
                         MessageBox.Show(
-                            $"Row {rowIndex + 1} does not contain a description column.\n\n" +
+                            $"Row {rowIndex + 1} - Has Data row error\n\n" +
                             string.Join(" | ", transformedRow),
                             "Transform Error",
                             MessageBoxButton.OK,
@@ -133,10 +139,10 @@ namespace ZAxis_CreditCardStatement_Transform
                 directory,
                 $"{fileName}_Sage{extension}");
 
-            // Save the standard transformed CSV.
+            // save the standard transformed CSV.
             writeCSVFile(transformedOutputPath, csvRows);
 
-            // Create a deep copy for the Sage version.
+            // deep copy for the Sage version.
             List<string[]> sageRows = csvRows
                 .Select(row => row.ToArray())
                 .ToList();
@@ -161,7 +167,7 @@ namespace ZAxis_CreditCardStatement_Transform
             if (categoryIndex < 0)
             {
                 MessageBox.Show(
-                    "The Category column could not be found.",
+                    "The 'Category' column could not be found.",
                     "Sage Transform Error",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
@@ -172,7 +178,7 @@ namespace ZAxis_CreditCardStatement_Transform
             if (glAccountIndex < 0)
             {
                 MessageBox.Show(
-                    "The GL Account Number column could not be found.",
+                    "The 'GL Account Number' column could not be found.",
                     "Sage Transform Error",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
