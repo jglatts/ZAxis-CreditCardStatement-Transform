@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
+using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,7 +30,88 @@ namespace ZAxis_CreditCardStatement_Transform
 
         private void btnLoadAndTransform_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Load and Transform button clicked! " + selectedFilePath);
+            if (string.IsNullOrWhiteSpace(selectedFilePath))
+            {
+                MessageBox.Show("Please select a CSV file first");
+                return;
+            }
+
+            if (csvRows.Count == 0)
+            {
+                MessageBox.Show("The selected CSV file does not contain any rows.");
+                return;
+            }
+
+            if (!transformCSV())
+            {
+                MessageBox.Show($"Unable to transform the CSV file.");
+            }
+        }
+
+        private bool transformCSV()
+        {
+            for (int rowIndex = 0; rowIndex < csvRows.Count; rowIndex++)
+            {
+                string[] currentRow = csvRows[rowIndex];
+                if (currentRow.Length < 3)
+                {
+                    return false;
+                }
+                var transformedRow = new List<string>(currentRow);
+                transformedRow.RemoveAt(2);
+                transformedRow.RemoveAt(1);
+                csvRows[rowIndex] = transformedRow.ToArray();
+            }
+
+            // change first column headers
+            csvRows[0][0] = "Statement Date";
+
+            saveTransformedCSV();
+
+            return true;
+        }
+
+        private void saveTransformedCSV()
+        {
+            string directory = System.IO.Path.GetDirectoryName(selectedFilePath)!;
+            string fileName = System.IO.Path.GetFileNameWithoutExtension(selectedFilePath);
+            string extension = System.IO.Path.GetExtension(selectedFilePath);
+
+            string outputPath = System.IO.Path.Combine(
+                directory,
+                $"{fileName}_Transformed{extension}");
+
+            using var writer = new StreamWriter(outputPath);
+
+            foreach (string[] row in csvRows)
+            {
+                writer.WriteLine(string.Join(",", row.Select(EscapeCsvField)));
+            }
+
+            MessageBox.Show(
+                $"Transformed CSV saved successfully.\n\n{outputPath}",
+                "Success",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = outputPath,
+                UseShellExecute = true
+            });
+        }
+
+        private static string EscapeCsvField(string field)
+        {
+            if (field.Contains(',') ||
+                field.Contains('"') ||
+                field.Contains('\n') ||
+                field.Contains('\r'))
+            {
+                return $"\"{field.Replace("\"", "\"\"")}\"";
+            }
+
+            return field;
         }
 
         private void btnBrowseFiles_Click(object sender, RoutedEventArgs e)
@@ -48,6 +131,7 @@ namespace ZAxis_CreditCardStatement_Transform
             if (result == true)
             {
                 selectedFilePath = fileDialog.FileName;
+                txtBoxCSVFileName.Text = selectedFilePath;
                 loadCSVFile();
             }
 
