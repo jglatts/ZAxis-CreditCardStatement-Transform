@@ -50,6 +50,7 @@ namespace ZAxis_CreditCardStatement_Transform
             }
         }
 
+        // works but hardcoded for the specific CSV file format, will need to be updated for other formats
         private bool transformCSV()
         {
             if (csvRows.Count == 0)
