@@ -100,6 +100,8 @@ namespace ZAxis_CreditCardStatement_Transform
 
                     // get GL Account Number based on the description in the second column (index 1)
                     // will need further testing 
+                    // note SAGE excepcts GL account number to be in the CATEGORY column (index 3) of the CSV file
+                    // see scanned doc for more
                     string description = transformedRow[1];
 
                     string glAccountNumber =
@@ -122,28 +124,141 @@ namespace ZAxis_CreditCardStatement_Transform
             string fileName = System.IO.Path.GetFileNameWithoutExtension(selectedFilePath);
             string extension = System.IO.Path.GetExtension(selectedFilePath);
 
-            string outputPath = System.IO.Path.Combine(
+            string transformedOutputPath = System.IO.Path.Combine(
                 directory,
                 $"{fileName}_Transformed{extension}");
 
-            using var writer = new StreamWriter(outputPath);
+            string sageOutputPath = System.IO.Path.Combine(
+                directory,
+                $"{fileName}_Sage{extension}");
 
-            foreach (string[] row in csvRows)
+            // Save the standard transformed CSV.
+            writeCSVFile(transformedOutputPath, csvRows);
+
+            // Create a deep copy for the Sage version.
+            List<string[]> sageRows = csvRows
+                .Select(row => row.ToArray())
+                .ToList();
+
+            if (sageRows.Count == 0)
+                return;
+
+            string[] headerRow = sageRows[0];
+
+            int categoryIndex = Array.FindIndex(
+                headerRow,
+                column => column.Equals(
+                    "Category",
+                    StringComparison.OrdinalIgnoreCase));
+
+            int glAccountIndex = Array.FindIndex(
+                headerRow,
+                column => column.Equals(
+                    "GL Account Number",
+                    StringComparison.OrdinalIgnoreCase));
+
+            if (categoryIndex < 0)
             {
-                writer.WriteLine(string.Join(",", row.Select(EscapeCsvField)));
+                MessageBox.Show(
+                    "The Category column could not be found.",
+                    "Sage Transform Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                return;
             }
 
+            if (glAccountIndex < 0)
+            {
+                MessageBox.Show(
+                    "The GL Account Number column could not be found.",
+                    "Sage Transform Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                return;
+            }
+
+            for (int rowIndex = 0; rowIndex < sageRows.Count; rowIndex++)
+            {
+                List<string> row = sageRows[rowIndex].ToList();
+
+                if (row.Count <= categoryIndex ||
+                    row.Count <= glAccountIndex)
+                {
+                    MessageBox.Show(
+                        $"Row {rowIndex + 1} does not contain the expected columns.",
+                        "Sage Transform Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+
+                    return;
+                }
+
+                if (rowIndex > 0)
+                {
+                    // Copy the GL account number into Category.
+                    row[categoryIndex] = row[glAccountIndex];
+                }
+
+                // Remove only the extra GL Account Number column.
+                // Credit and all other columns remain untouched.
+                row.RemoveAt(glAccountIndex);
+
+                sageRows[rowIndex] = row.ToArray();
+            }
+
+            // update header
+            sageRows[0][2] = "GL Account Number";
+
+            writeCSVFile(sageOutputPath, sageRows);
+
             MessageBox.Show(
-                $"Transformed CSV saved successfully.\n\n{outputPath}",
+                $"CSV files saved successfully.\n\n" +
+                $"Transformed:\n{transformedOutputPath}\n\n" +
+                $"Sage:\n{sageOutputPath}",
                 "Success",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
 
-            Process.Start(new ProcessStartInfo
+            try
             {
-                FileName = outputPath,
-                UseShellExecute = true
-            });
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = transformedOutputPath,
+                    UseShellExecute = true
+                });
+
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = sageOutputPath,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"The files were saved, but could not be opened.\n\n{ex.Message}",
+                    "Open Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+            }
+        }
+
+        private static void writeCSVFile(
+            string outputPath,
+            IEnumerable<string[]> rows)
+        {
+            using var writer = new StreamWriter(
+                outputPath,
+                false,
+                new UTF8Encoding(encoderShouldEmitUTF8Identifier: true));
+
+            foreach (string[] row in rows)
+            {
+                writer.WriteLine(
+                    string.Join(",", row.Select(EscapeCsvField)));
+            }
         }
 
         private static string EscapeCsvField(string field)

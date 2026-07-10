@@ -49,6 +49,9 @@ namespace ZAxis_CreditCardStatement_Transform
         // default mapping rules for common vendors and descriptions
         // uses DESCRIPTION field from the credit card statement to determine the GL account
         // should consider using CATEGORGY field as well, but this works as first-pass for common vendorss
+        // nice to have:
+        //  - ability to add custom rules for specific card numbers and descriptions 
+        //  - save and load rules from a file 
         private void loadDefaultRules()
         {
             addRule("", "AMAZON", GLAccounts.OfficeExpense);
