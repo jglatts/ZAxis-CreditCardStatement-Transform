@@ -21,7 +21,9 @@ namespace ZAxis_CreditCardStatement_Transform
     public partial class MainWindow : Window
     {
         private string selectedFilePath = "";
-        private readonly List<string[]> csvRows = new();
+        private List<string[]> csvRows = new();
+
+        private Mapper glMapper = new();
 
         public MainWindow()
         {
@@ -50,21 +52,62 @@ namespace ZAxis_CreditCardStatement_Transform
 
         private bool transformCSV()
         {
+            if (csvRows.Count == 0)
+                return false;
+
             for (int rowIndex = 0; rowIndex < csvRows.Count; rowIndex++)
             {
                 string[] currentRow = csvRows[rowIndex];
-                if (currentRow.Length < 3)
+
+                if (currentRow.Length < 4)
                 {
+                    MessageBox.Show(
+                        $"Row {rowIndex + 1} does not contain enough columns.\n\n" +
+                        $"Column count: {currentRow.Length}",
+                        "Transform Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+
                     return false;
                 }
+
                 var transformedRow = new List<string>(currentRow);
+
+                // Remove the original third column first.
                 transformedRow.RemoveAt(2);
+
+                // Then remove the original second column.
                 transformedRow.RemoveAt(1);
+
+                if (rowIndex == 0)
+                {
+                    transformedRow[0] = "Statement Date";
+                    transformedRow.Add("GL Account Number");
+                }
+                else
+                {
+                    if (transformedRow.Count <= 3)
+                    {
+                        MessageBox.Show(
+                            $"Row {rowIndex + 1} does not contain a description column.\n\n" +
+                            string.Join(" | ", transformedRow),
+                            "Transform Error",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
+
+                        return false;
+                    }
+
+                    string description = transformedRow[1];
+
+                    string glAccountNumber =
+                        glMapper.getGLAccountNumber("", description);
+
+                    transformedRow.Add(glAccountNumber);
+                }
+
                 csvRows[rowIndex] = transformedRow.ToArray();
             }
-
-            // change first column headers
-            csvRows[0][0] = "Statement Date";
 
             saveTransformedCSV();
 
