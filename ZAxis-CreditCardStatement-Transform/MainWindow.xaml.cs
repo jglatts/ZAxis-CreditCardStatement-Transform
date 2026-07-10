@@ -98,6 +98,8 @@ namespace ZAxis_CreditCardStatement_Transform
                         return false;
                     }
 
+                    // get GL Account Number based on the description in the second column (index 1)
+                    // will need further testing 
                     string description = transformedRow[1];
 
                     string glAccountNumber =

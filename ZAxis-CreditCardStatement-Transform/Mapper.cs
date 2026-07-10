@@ -45,6 +45,10 @@ namespace ZAxis_CreditCardStatement_Transform
             return account?.AccountNumber ?? defaultAccount;
         }
 
+
+        // default mapping rules for common vendors and descriptions
+        // uses DESCRIPTION field from the credit card statement to determine the GL account
+        // should consider using CATEGORGY field as well, but this works as first-pass for common vendorss
         private void loadDefaultRules()
         {
             addRule("", "AMAZON", GLAccounts.OfficeExpense);
@@ -58,7 +62,7 @@ namespace ZAxis_CreditCardStatement_Transform
             addRule("", "LINDE GAS", GLAccounts.ShopSuppliesExpense);
             addRule("", "EZ PASS", GLAccounts.AutoAndTravel);
             addRule("", "ATT", GLAccounts.Telephone);
-            addRule("", "DIGI KEY", GLAccounts.ShopSuppliesExpense);
+            addRule("", "DIGI KEY", GLAccounts.FlexibleTestExpense);
             addRule("", "VERIZON", GLAccounts.CellularTelephone);
             addRule("", "UPS", GLAccounts.ShippingExpense);
             addRule("", "FEDEX", GLAccounts.ShippingExpense);
