@@ -4,6 +4,10 @@
  * Provides merchant description to General Ledger (GL) account mapping used
  * to automatically categorize transactions during the CSV transformation
  * process.
+ * 
+ *  * ToDo:
+ *  - Map with both description and category to GL account number
+ *  - Can try both and see if one works, or just use category if available
  *
  * Author: John Glatts
  ******************************************************************************/
@@ -129,6 +133,8 @@ namespace ZAxis_CreditCardStatement_Transform
 
         public bool isMatch(string cardNumber, string description)
         {
+            // matches if the card number ends with the specified card number (if provided)
+            // and the description contains the specified keyword (case-insensitive)
             bool cardMatches =
                 string.IsNullOrWhiteSpace(CardNumber) ||
                 cardNumber.EndsWith(CardNumber, StringComparison.Ordinal);

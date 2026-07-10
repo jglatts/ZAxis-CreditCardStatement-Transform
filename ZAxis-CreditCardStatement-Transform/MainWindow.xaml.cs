@@ -4,6 +4,12 @@
  * Main application window responsible for loading credit card statement CSV
  * files, transforming the data into the required output formats, and
  * generating files for review and Sage import.
+ * 
+ * 
+ * ToDo:
+ * 
+ *  - Map with both description and category to GL account number
+ *  - Can try both and see if one works, or just use category if available
  *
  * Author: John Glatts
  ******************************************************************************/
