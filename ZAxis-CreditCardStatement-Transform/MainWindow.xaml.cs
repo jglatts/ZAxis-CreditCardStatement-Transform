@@ -48,10 +48,9 @@ namespace ZAxis_CreditCardStatement_Transform
             if (result == true)
             {
                 selectedFilePath = fileDialog.FileName;
-                MessageBox.Show($"Selected file: {fileDialog.FileName}");
+                loadCSVFile();
             }
 
-            loadCSVFile();
         }
 
         private void loadCSVFile()
@@ -78,7 +77,8 @@ namespace ZAxis_CreditCardStatement_Transform
                 }
             }
 
-            MessageBox.Show($"Loaded {csvRows.Count} rows from the CSV file.");
+            //MessageBox.Show($"Loaded {csvRows.Count} rows from the CSV file.");
+            //MessageBox.Show(csvRows.Count > 0 ? string.Join(", ", csvRows[1]) : "No rows loaded");
         }
 
     }
