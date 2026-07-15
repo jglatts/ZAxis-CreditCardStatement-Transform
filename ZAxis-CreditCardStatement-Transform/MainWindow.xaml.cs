@@ -7,7 +7,6 @@
  * 
  * 
  * ToDo:
- * 
  *  - Map with both description and category to GL account number
  *  - Can try both and see if one works, or just use category if available
  *
@@ -116,13 +115,13 @@ namespace ZAxis_CreditCardStatement_Transform
                     // note SAGE excepcts GL account number to be in the CATEGORY column (index 3) of the CSV file
                     // see scanned doc for more
                     string description = transformedRow[1];
-
+                    
                     string glAccountNumber =
                         glMapper.getGLAccountNumber("", description);
 
                     transformedRow.Add(glAccountNumber);
                 }
-
+                
                 csvRows[rowIndex] = transformedRow.ToArray();
             }
 
