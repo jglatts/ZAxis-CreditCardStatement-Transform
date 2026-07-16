@@ -20,8 +20,6 @@ namespace ZAxis_CreditCardStatement_Transform
 {
     public class Mapper
     {
-        public List<MappingRule> mappingRules = new();
-        
         // working with a tuple
         // can use a class for DTOs 
         public List<(string account_number, string keyword_description)> keywordMap = new();
