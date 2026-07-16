@@ -73,7 +73,7 @@
             </Grid>
         </GroupBox>
 
-        <!-- Action button -->
+        <!-- Load & Transform Button -->
         <Button x:Name="btnLoadAndTransform"
                 Grid.Row="4"
                 Content="Load &amp; Transform"
@@ -83,6 +83,17 @@
                 FontSize="14"
                 FontWeight="SemiBold"
                 Click="btnLoadAndTransform_Click"/>
+
+        <!-- View Rules -->
+        <Button x:Name="btnViewRules"
+                Grid.Row="4"
+                Grid.Column="1"
+                Content="View Rules"
+                Width="200"
+                Height="40"
+                FontSize="14"
+                FontWeight="SemiBold"
+                Click="btnViewRules_Click"/>
 
     </Grid>
 </Window>

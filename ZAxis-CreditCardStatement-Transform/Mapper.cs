@@ -19,7 +19,7 @@ namespace ZAxis_CreditCardStatement_Transform
 {
     public class Mapper
     {
-        private readonly List<MappingRule> mappingRules = new();
+        public List<MappingRule> mappingRules = new();
 
         public Mapper()
         {

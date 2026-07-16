@@ -337,5 +337,14 @@ namespace ZAxis_CreditCardStatement_Transform
             //MessageBox.Show(csvRows.Count > 0 ? string.Join(", ", csvRows[1]) : "No rows loaded");
         }
 
+        private void btnViewRules_Click(object sender, RoutedEventArgs e)
+        {
+            RulesWindow rulesWindow = new RulesWindow(glMapper.mappingRules)
+            {
+                Owner = this
+            };
+
+            rulesWindow.Show();
+        }
     }
 }
