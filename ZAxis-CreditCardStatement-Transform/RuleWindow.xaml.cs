@@ -30,14 +30,9 @@ namespace ZAxis_CreditCardStatement_Transform
             UpdateRuleNumbers();
         }
 
-        private void btnAdd_Click(
-            object sender,
-            RoutedEventArgs e)
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            KeywordRuleDisplay newRule = new(
-                displayedRules.Count + 1,
-                "",
-                "");
+            KeywordRuleDisplay newRule = new(displayedRules.Count + 1, "", "");
 
             displayedRules.Add(newRule);
 
@@ -54,12 +49,9 @@ namespace ZAxis_CreditCardStatement_Transform
             rulesDataGrid.BeginEdit();
         }
 
-        private void btnDelete_Click(
-            object sender,
-            RoutedEventArgs e)
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            if (rulesDataGrid.SelectedItem
-                is not KeywordRuleDisplay rule)
+            if (rulesDataGrid.SelectedItem is not KeywordRuleDisplay rule)
             {
                 MessageBox.Show(
                     "Select a rule to delete.",
@@ -84,9 +76,7 @@ namespace ZAxis_CreditCardStatement_Transform
             UpdateRuleNumbers();
         }
 
-        private void btnSave_Click(
-            object sender,
-            RoutedEventArgs e)
+        private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             // Commit the currently edited cell before reading its value.
             rulesDataGrid.CommitEdit(
@@ -118,38 +108,25 @@ namespace ZAxis_CreditCardStatement_Transform
 
         private bool ValidateRules()
         {
-            for (int index = 0;
-                 index < displayedRules.Count;
-                 index++)
+            for (int index = 0; index < displayedRules.Count; index++)
             {
-                KeywordRuleDisplay rule =
-                    displayedRules[index];
+                KeywordRuleDisplay rule = displayedRules[index];
 
                 if (string.IsNullOrWhiteSpace(rule.Keyword))
                 {
-                    ShowInvalidRule(
-                        rule,
-                        $"Rule {index + 1} is missing a keyword.");
-
+                    ShowInvalidRule(rule, $"Rule {index + 1} is missing a keyword.");
                     return false;
                 }
 
-                if (string.IsNullOrWhiteSpace(
-                        rule.AccountNumber))
+                if (string.IsNullOrWhiteSpace(rule.AccountNumber))
                 {
-                    ShowInvalidRule(
-                        rule,
-                        $"Rule {index + 1} is missing a GL account number.");
-
+                    ShowInvalidRule(rule, $"Rule {index + 1} is missing a GL account number.");
                     return false;
                 }
 
                 if (rule.Keyword.Contains(','))
                 {
-                    ShowInvalidRule(
-                        rule,
-                        $"Rule {index + 1} contains a comma.");
-
+                    ShowInvalidRule(rule,$"Rule {index + 1} contains a comma.");
                     return false;
                 }
 
@@ -164,10 +141,7 @@ namespace ZAxis_CreditCardStatement_Transform
 
                 if (duplicateExists)
                 {
-                    ShowInvalidRule(
-                        rule,
-                        $"The keyword \"{rule.Keyword}\" is already used.");
-
+                    ShowInvalidRule(rule, $"The keyword \"{rule.Keyword}\" is already used.");
                     return false;
                 }
             }

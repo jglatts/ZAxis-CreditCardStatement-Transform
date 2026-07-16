@@ -107,9 +107,8 @@ namespace ZAxis_CreditCardStatement_Transform
         public void updateKeywordMapFile()
         {
             // also update the mapping rules based on the new keyword map
-            System.IO.File.WriteAllLines(
-                rulesFilePath,
-                keywordMap.Select(entry => $"{entry.keyword_description}, {entry.account_number}"));
+            System.IO.File.WriteAllLines(rulesFilePath, keywordMap.Select(
+                entry => $"{entry.keyword_description}, {entry.account_number}"));
         }
 
         public void addKeywordRule(string keyword, string number)
