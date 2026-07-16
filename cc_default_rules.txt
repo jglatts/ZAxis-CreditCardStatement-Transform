@@ -1,0 +1,10 @@
+; comments begin with a semicolon
+; This file contains the default rules for the code compiler
+
+; syntax is:
+; keyword, gl-account-number
+
+; example:
+; AMAZON, 60180
+; FEDEX, 601831
+

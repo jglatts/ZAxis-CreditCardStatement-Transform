@@ -27,6 +27,15 @@ namespace ZAxis_CreditCardStatement_Transform
 
     public static class GLAccounts
     {
+
+        public static GLAccount? getGLAccountByNumber(string accountNumber)
+        {
+            return typeof(GLAccounts)
+                .GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)
+                .Select(field => field.GetValue(null) as GLAccount)
+                .FirstOrDefault(account => account?.AccountNumber == accountNumber);
+        }
+
         public static readonly GLAccount Telephone =
             new("Expenses", true, "Telephone", "60150");
 

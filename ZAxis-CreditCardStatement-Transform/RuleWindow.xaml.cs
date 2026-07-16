@@ -45,11 +45,6 @@ namespace ZAxis_CreditCardStatement_Transform
                 ? "Any description"
                 : rule.DescriptionKeyword;
 
-        public string CategoryDisplay =>
-            string.IsNullOrWhiteSpace(rule.CategoryKeyword)
-                ? "Any category"
-                : rule.CategoryKeyword;
-
         public string AccountNumber => rule.Account.AccountNumber;
 
         public string AccountDescription => rule.Account.Description;

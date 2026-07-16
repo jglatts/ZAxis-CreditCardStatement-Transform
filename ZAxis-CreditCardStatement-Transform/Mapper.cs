@@ -14,6 +14,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 
 namespace ZAxis_CreditCardStatement_Transform
 {
@@ -21,9 +22,12 @@ namespace ZAxis_CreditCardStatement_Transform
     {
         public List<MappingRule> mappingRules = new();
 
+        public static string rulesFilePath = "mapping-rules.txt";
+
         public Mapper()
         {
-            loadDefaultRules();
+            if (!loadRulesFromFile())
+                loadDefaultRules();
         }
 
         public GLAccount? findGLAccount(string cardNumber, string description)
@@ -58,6 +62,42 @@ namespace ZAxis_CreditCardStatement_Transform
             return account?.AccountNumber ?? defaultAccount;
         }
 
+        private bool loadRulesFromFile()
+        {
+            if (!System.IO.File.Exists(rulesFilePath))
+            {
+                MessageBox.Show($"Mapping rules file not found: {rulesFilePath}. Using default rules.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                return false;
+            }
+
+            string[] lines = System.IO.File.ReadAllLines(rulesFilePath);
+
+            foreach (string line in lines)
+            {
+                if (line.StartsWith(";") || string.IsNullOrWhiteSpace(line))
+                {
+                    continue; 
+                }
+
+                string[] parts = line.Split(',');
+                if (parts.Length == 2)
+                {
+                    string keyword = parts[0].Trim();
+                    string accountNumber = parts[1].Trim();
+                    GLAccount? account = GLAccounts.getGLAccountByNumber(accountNumber);
+                    if (account != null)
+                    {
+                        addRule("", keyword, account);
+                    }
+                    else 
+                    {
+                        //MessageBox.Show($"GL account number not found: {accountNumber}. Rule for keyword '{keyword}' will be ignored.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }
+            }
+
+            return true;
+        }
 
         // default mapping rules for common vendors and descriptions
         // uses DESCRIPTION field from the credit card statement to determine the GL account
