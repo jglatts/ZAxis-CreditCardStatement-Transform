@@ -21,17 +21,15 @@ namespace ZAxis_CreditCardStatement_Transform
     public class Mapper
     {
         public List<MappingRule> mappingRules = new();
+        
+        // working with a tuple
+        // can use a class for DTOs 
         public List<(string account_number, string keyword_description)> keywordMap = new();
 
         public static string rulesFilePath = "mapping-rules.txt";
 
         public Mapper()
         {
-            /*
-            if (!loadRulesFromFile())
-                loadDefaultRules();
-            */
-            
             if (!loadKeywordMap())
                 loadKeywordMapDefault();
         }
@@ -144,17 +142,6 @@ namespace ZAxis_CreditCardStatement_Transform
             return matchingEntry.account_number ?? "60270"; 
         }
 
-        public GLAccount? findGLAccount(string cardNumber, string description)
-        {
-            string normalizedCard = normalizeCardNumber(cardNumber);
-            string normalizedDescription = normalizeDescription(description);
-
-            MappingRule? matchingRule = mappingRules.FirstOrDefault(rule =>
-                rule.isMatch(normalizedCard, normalizedDescription));
-
-            return matchingRule?.Account;
-        }
-
         private string normalizeDescription(string description)
         {
             if (string.IsNullOrWhiteSpace(description))
@@ -164,101 +151,6 @@ namespace ZAxis_CreditCardStatement_Transform
                 .Trim()
                 .ToUpperInvariant()
                 .Replace("\t", " ");
-        }
-
-        public string getGLAccountNumber(
-            string cardNumber,
-            string description,
-            string defaultAccount = "60270")
-        {
-            GLAccount? account = findGLAccount(cardNumber, description);
-
-            return account?.AccountNumber ?? defaultAccount;
-        }
-
-        private bool loadRulesFromFile()
-        {
-            if (!System.IO.File.Exists(rulesFilePath))
-            {
-                MessageBox.Show($"Mapping rules file not found: {rulesFilePath}. Using default rules.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-                return false;
-            }
-
-            string[] lines = System.IO.File.ReadAllLines(rulesFilePath);
-
-            foreach (string line in lines)
-            {
-                if (line.StartsWith(";") || string.IsNullOrWhiteSpace(line))
-                {
-                    continue; 
-                }
-                string[] parts = line.Split(',');
-                if (parts.Length == 2)
-                {
-                    string keyword = parts[0].Trim();
-                    string accountNumber = parts[1].Trim();
-                    GLAccount? account = GLAccounts.getGLAccountByNumber(accountNumber);
-                    if (account != null)
-                    {
-                        addRule("", keyword, account);
-                    }
-                    else 
-                    {
-                        //MessageBox.Show($"GL account number not found: {accountNumber}. Rule for keyword '{keyword}' will be ignored.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
-                }
-            }
-            return true;
-        }
-
-        // default mapping rules for common vendors and descriptions
-        // uses DESCRIPTION field from the credit card statement to determine the GL account
-        // should consider using CATEGORGY field as well, but this works as first-pass for common vendorss
-        // nice to have:
-        //  - ability to add custom rules for specific card numbers and descriptions 
-        //  - save and load rules from a file 
-        private void loadDefaultRules()
-        {
-            addRule("", "AMAZON", GLAccounts.OfficeExpense);
-            addRule("", "COSTCO GAS", GLAccounts.AutoAndTravel);
-            addRule("", "STRATASYS", GLAccounts.FlexibleTestExpense);
-            addRule("", "TESTEQUITY", GLAccounts.ShopEquipment);
-            addRule("", "PRIME VIDEO", GLAccounts.BusinessEntertainment);
-            addRule("", "EBAY", GLAccounts.EbayOfficeExpense);
-            addRule("", "REACHLOCAL", GLAccounts.Advertising);
-            addRule("", "AUDIBLE", GLAccounts.SubscriptionsAndMagazines);
-            addRule("", "LINDE GAS", GLAccounts.ShopSuppliesExpense);
-            addRule("", "EZ PASS", GLAccounts.AutoAndTravel);
-            addRule("", "ATT", GLAccounts.Telephone);
-            addRule("", "DIGI KEY", GLAccounts.FlexibleTestExpense);
-            addRule("", "FORMLABS", GLAccounts.FlexibleTestExpense);
-            addRule("", "VERIZON", GLAccounts.CellularTelephone);
-            addRule("", "UPS", GLAccounts.ShippingExpense);
-            addRule("", "FEDEX", GLAccounts.ShippingExpense);
-            addRule("", "DHL", GLAccounts.ShippingExpense);
-            addRule("", "CANVA", GLAccounts.SoftwareExpense);
-            addRule("", "MCMASTER", GLAccounts.ShopSuppliesExpense);
-            addRule("", "STAPLES", GLAccounts.OfficeExpense);
-            addRule("", "HARBOR FREIGHT", GLAccounts.Tools);
-            addRule("", "HOME DEPOT", GLAccounts.ShopSuppliesExpense);
-            addRule("", "LECK WASTE", GLAccounts.Utilities);
-            addRule("", "HOSTING", GLAccounts.OnlineComputerServices);
-            addRule("", "LINKEDIN", GLAccounts.Advertising);
-            addRule("", "PCBWAY", GLAccounts.ZWireResearchMaterialsAndEquipment);
-            addRule("", "ULINE", GLAccounts.ShippingSuppliesExpense);
-        }
-
-        public void addRule(
-            string cardNumber,
-            string descriptionKeyword,
-            GLAccount account, 
-            string categoryKeyword = "")
-        {
-            mappingRules.Add(new MappingRule(
-                normalizeCardNumber(cardNumber),
-                normalizeDescription(descriptionKeyword),
-                categoryKeyword,
-                account));
         }
 
         private static string normalizeCardNumber(string cardNumber)

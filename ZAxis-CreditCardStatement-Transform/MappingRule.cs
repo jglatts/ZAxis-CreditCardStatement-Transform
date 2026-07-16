@@ -24,18 +24,15 @@ namespace ZAxis_CreditCardStatement_Transform
         public string CardNumber { get; }
         public string DescriptionKeyword { get; }
         public string CategoryKeyword { get; }
-        public GLAccount Account { get; }
 
         public MappingRule(
             string cardNumber,
             string descriptionKeyword,
-            string categoryKeyword,
-            GLAccount account)
+            string categoryKeyword)
         {
             CardNumber = cardNumber;
             DescriptionKeyword = descriptionKeyword;
             CategoryKeyword = categoryKeyword;
-            Account = account;
         }
 
         public bool isMatch(string cardNumber, string description)
