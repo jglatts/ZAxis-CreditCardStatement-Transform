@@ -104,10 +104,37 @@ namespace ZAxis_CreditCardStatement_Transform
             };
         }
 
+        public void updateKeywordMap()
+        {
+            // also update the mapping rules based on the new keyword map
+            System.IO.File.WriteAllLines(
+                rulesFilePath,
+                keywordMap.Select(entry => $"{entry.keyword_description}, {entry.account_number}"));
+        }
+
         public void addKeywordRule(string keyword, string number)
-        { 
+        {
+            keyword = normalizeDescription(keyword);
+            number = number.Trim();
+
+            bool alreadyExists = keywordMap.Any(entry =>
+                entry.keyword_description.Equals(
+                    keyword,
+                    StringComparison.OrdinalIgnoreCase));
+
+            if (alreadyExists)
+            {
+                MessageBox.Show($"Keyword '{keyword}' already exists in the mapping rules. Please choose a different keyword.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             keywordMap.Add((number, keyword));
-            System.IO.File.AppendAllText(rulesFilePath, $"{keyword},{number}{Environment.NewLine}");
+
+            System.IO.File.AppendAllText(
+                rulesFilePath,
+                $"{keyword}, {number}{Environment.NewLine}");
+
+            return;
         }
 
         public string findGLAccountNumberByKeyword(string description)

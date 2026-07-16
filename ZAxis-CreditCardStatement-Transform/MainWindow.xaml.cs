@@ -340,12 +340,12 @@ namespace ZAxis_CreditCardStatement_Transform
 
         private void btnViewRules_Click(object sender, RoutedEventArgs e)
         {
-            RulesWindow rulesWindow = new RulesWindow(glMapper.keywordMap)
+            RulesWindow rulesWindow = new(glMapper)
             {
                 Owner = this
             };
 
-            rulesWindow.Show();
+            rulesWindow.ShowDialog();
         }
 
         private void btnAddRule_Click(object sender, RoutedEventArgs e)
