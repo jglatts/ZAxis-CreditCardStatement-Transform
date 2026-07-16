@@ -28,40 +28,29 @@
         </StackPanel>
 
         <DataGrid x:Name="rulesDataGrid"
-                  Grid.Row="1"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  CanUserReorderColumns="True"
-                  CanUserSortColumns="True"
-                  SelectionMode="Single"
-                  GridLinesVisibility="Horizontal"
-                  HeadersVisibility="Column"
-                  AlternatingRowBackground="#FFF4F4F4">
+          Grid.Row="1"
+          AutoGenerateColumns="False"
+          IsReadOnly="True"
+          CanUserAddRows="False"
+          CanUserDeleteRows="False"
+          SelectionMode="Single"
+          GridLinesVisibility="Horizontal"
+          HeadersVisibility="Column"
+          AlternatingRowBackground="#FFF4F4F4">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="#"
-                                    Binding="{Binding RuleNumber}"
-                                    Width="50"/>
+                            Binding="{Binding RuleNumber}"
+                            Width="50"/>
 
-                <DataGridTextColumn Header="Card"
-                                    Binding="{Binding CardDisplay}"
-                                    Width="130"/>
+                <DataGridTextColumn Header="Keyword"
+                            Binding="{Binding Keyword}"
+                            Width="*"
+                            MinWidth="250"/>
 
-                <DataGridTextColumn Header="Description"
-                                    Binding="{Binding DescriptionDisplay}"
-                                    Width="*"
-                                    MinWidth="180"/>
-
-                <DataGridTextColumn Header="GL Account"
-                                    Binding="{Binding AccountNumber}"
-                                    Width="110"/>
-
-                <DataGridTextColumn Header="Account Description"
-                                    Binding="{Binding AccountDescription}"
-                                    Width="*"
-                                    MinWidth="220"/>
+                <DataGridTextColumn Header="GL Account Number"
+                            Binding="{Binding AccountNumber}"
+                            Width="180"/>
             </DataGrid.Columns>
         </DataGrid>
 

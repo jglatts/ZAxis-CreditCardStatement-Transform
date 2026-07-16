@@ -117,9 +117,8 @@ namespace ZAxis_CreditCardStatement_Transform
                     // note SAGE excepcts GL account number to be in the CATEGORY column (index 3) of the CSV file
                     // see scanned doc for more
                     string description = transformedRow[1];
-                    
-                    string glAccountNumber =
-                        glMapper.getGLAccountNumber("", description);
+
+                    string glAccountNumber = glMapper.findGLAccountNumberByKeyword(description);
 
                     transformedRow.Add(glAccountNumber);
                 }
