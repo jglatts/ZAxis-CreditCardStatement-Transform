@@ -38,7 +38,6 @@ namespace ZAxis_CreditCardStatement_Transform
         private string selectedFilePath = "";
         private List<string[]> csvRows = new();
 
-
         private Mapper glMapper = new();
 
         public MainWindow()
