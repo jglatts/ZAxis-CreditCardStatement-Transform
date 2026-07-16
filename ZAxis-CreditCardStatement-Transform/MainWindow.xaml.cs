@@ -9,6 +9,7 @@
  * ToDo:
  *  - Map with both description and category to GL account number
  *  - Can try both and see if one works, or just use category if available
+ *  - Think about file saving\will need more GL account objects
  *
  * Author: John Glatts
  ******************************************************************************/
@@ -36,6 +37,7 @@ namespace ZAxis_CreditCardStatement_Transform
     {
         private string selectedFilePath = "";
         private List<string[]> csvRows = new();
+
 
         private Mapper glMapper = new();
 
@@ -339,7 +341,7 @@ namespace ZAxis_CreditCardStatement_Transform
 
         private void btnViewRules_Click(object sender, RoutedEventArgs e)
         {
-            RulesWindow rulesWindow = new RulesWindow(glMapper.mappingRules)
+            RulesWindow rulesWindow = new RulesWindow(glMapper.keywordMap)
             {
                 Owner = this
             };
@@ -355,42 +357,15 @@ namespace ZAxis_CreditCardStatement_Transform
             };
 
             bool? result = addRuleWindow.ShowDialog();
-
             if (result != true)
                 return;
 
-            // will have to create a new GL account object
-            // and save it 
-
-            bool ruleAdded = glMapper.addRule(
-                addRuleWindow.DescriptionKeyword,
-                addRuleWindow.AccountNumber);
-
-            if (!ruleAdded)
+            string accountNumber = addRuleWindow.AccountNumber;
+            string accountName = addRuleWindow.DescriptionKeyword;
+            if (!string.IsNullOrEmpty(accountNumber) && !string.IsNullOrEmpty(accountName))
             {
-                MessageBox.Show(
-                    "The rule could not be added.\n\n" +
-                    "Check that:\n" +
-                    "• The GL account number exists\n" +
-                    "• The keyword is not already in the rule list",
-                    "Add Rule Failed",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
-
-                return;
+                glMapper.addKeywordRule(accountName, accountNumber);
             }
-
-            MessageBox.Show(
-                $"Rule added successfully.\n\n" +
-                $"{addRuleWindow.DescriptionKeyword.ToUpperInvariant()}, " +
-                $"{addRuleWindow.AccountNumber}",
-                "Rule Added",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
-
-            RulesWindow rulesWindow = new RulesWindow(glMapper.mappingRules) { Owner = this };
-
-            rulesWindow.Show();
         }
     }
 }

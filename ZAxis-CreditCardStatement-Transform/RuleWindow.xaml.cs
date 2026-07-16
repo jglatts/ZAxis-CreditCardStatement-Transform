@@ -6,15 +6,18 @@ namespace ZAxis_CreditCardStatement_Transform
 {
     public partial class RulesWindow : Window
     {
-        public RulesWindow(IEnumerable<MappingRule> mappingRules)
+        public RulesWindow(
+            IEnumerable<(string account_number, string keyword_description)> keywordMap)
         {
             InitializeComponent();
 
-            List<MappingRuleDisplay> displayedRules = mappingRules
-                .Select((rule, index) => new MappingRuleDisplay(rule, index + 1))
+            List<KeywordRuleDisplay> displayedRules = keywordMap
+                .Select((entry, index) =>
+                    new KeywordRuleDisplay(
+                        index + 1,
+                        entry.keyword_description,
+                        entry.account_number))
                 .ToList();
-
-            // sort by account #
 
             rulesDataGrid.ItemsSource = displayedRules;
 
@@ -23,36 +26,30 @@ namespace ZAxis_CreditCardStatement_Transform
                 (displayedRules.Count == 1 ? "" : "s");
         }
 
-        private void btnClose_Click(object sender, RoutedEventArgs e)
+        private void btnClose_Click(
+            object sender,
+            RoutedEventArgs e)
         {
             Close();
         }
     }
 
-    public class MappingRuleDisplay
+    public class KeywordRuleDisplay
     {
-        private readonly MappingRule rule;
-
         public int RuleNumber { get; }
 
-        public string CardDisplay =>
-            string.IsNullOrWhiteSpace(rule.CardNumber)
-                ? "Any card"
-                : $"Ends in {rule.CardNumber}";
+        public string Keyword { get; }
 
-        public string DescriptionDisplay =>
-            string.IsNullOrWhiteSpace(rule.DescriptionKeyword)
-                ? "Any description"
-                : rule.DescriptionKeyword;
+        public string AccountNumber { get; }
 
-        public string AccountNumber => rule.Account.AccountNumber;
-
-        public string AccountDescription => rule.Account.Description;
-
-        public MappingRuleDisplay(MappingRule mappingRule, int ruleNumber)
+        public KeywordRuleDisplay(
+            int ruleNumber,
+            string keyword,
+            string accountNumber)
         {
-            rule = mappingRule;
             RuleNumber = ruleNumber;
+            Keyword = keyword;
+            AccountNumber = accountNumber;
         }
     }
 }
