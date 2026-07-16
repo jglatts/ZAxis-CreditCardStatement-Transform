@@ -104,7 +104,7 @@ namespace ZAxis_CreditCardStatement_Transform
             };
         }
 
-        public void updateKeywordMap()
+        public void updateKeywordMapFile()
         {
             // also update the mapping rules based on the new keyword map
             System.IO.File.WriteAllLines(

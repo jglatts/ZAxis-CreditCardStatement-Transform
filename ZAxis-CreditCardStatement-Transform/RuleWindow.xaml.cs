@@ -109,8 +109,8 @@ namespace ZAxis_CreditCardStatement_Transform
                     rule.Keyword.Trim().ToUpperInvariant()));
             }
 
-            // This currently rewrites mapping-rules.txt.
-            mapper.updateKeywordMap();
+            // This currently rewrites mapping-rules.txt file
+            mapper.updateKeywordMapFile();
 
             DialogResult = true;
             Close();
@@ -198,12 +198,9 @@ namespace ZAxis_CreditCardStatement_Transform
 
         private void UpdateRuleNumbers()
         {
-            for (int index = 0;
-                 index < displayedRules.Count;
-                 index++)
+            for (int index = 0; index < displayedRules.Count; index++)
             {
-                displayedRules[index].RuleNumber =
-                    index + 1;
+                displayedRules[index].RuleNumber = index + 1;
             }
 
             ruleCountTextBlock.Text =
