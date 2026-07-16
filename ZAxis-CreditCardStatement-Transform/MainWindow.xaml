@@ -95,5 +95,15 @@
                 FontWeight="SemiBold"
                 Click="btnViewRules_Click"/>
 
+        <!-- View Rules -->
+        <Button x:Name="btnAddRule"
+                Grid.Row="4"
+                HorizontalAlignment="Right"
+                Content="Add Rule"
+                Width="200"
+                Height="40"
+                FontSize="14"
+                FontWeight="SemiBold" Click="btnAddRule_Click"/>
+        
     </Grid>
 </Window>

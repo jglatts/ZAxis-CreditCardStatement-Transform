@@ -54,11 +54,6 @@
                                     Width="*"
                                     MinWidth="180"/>
 
-                <DataGridTextColumn Header="Category"
-                                    Binding="{Binding CategoryDisplay}"
-                                    Width="*"
-                                    MinWidth="160"/>
-
                 <DataGridTextColumn Header="GL Account"
                                     Binding="{Binding AccountNumber}"
                                     Width="110"/>

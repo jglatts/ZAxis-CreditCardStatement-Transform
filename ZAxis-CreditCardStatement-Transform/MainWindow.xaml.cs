@@ -346,5 +346,51 @@ namespace ZAxis_CreditCardStatement_Transform
 
             rulesWindow.Show();
         }
+
+        private void btnAddRule_Click(object sender, RoutedEventArgs e)
+        {
+            AddRuleWindow addRuleWindow = new()
+            {
+                Owner = this
+            };
+
+            bool? result = addRuleWindow.ShowDialog();
+
+            if (result != true)
+                return;
+
+            // will have to create a new GL account object
+            // and save it 
+
+            bool ruleAdded = glMapper.addRule(
+                addRuleWindow.DescriptionKeyword,
+                addRuleWindow.AccountNumber);
+
+            if (!ruleAdded)
+            {
+                MessageBox.Show(
+                    "The rule could not be added.\n\n" +
+                    "Check that:\n" +
+                    "• The GL account number exists\n" +
+                    "• The keyword is not already in the rule list",
+                    "Add Rule Failed",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+
+                return;
+            }
+
+            MessageBox.Show(
+                $"Rule added successfully.\n\n" +
+                $"{addRuleWindow.DescriptionKeyword.ToUpperInvariant()}, " +
+                $"{addRuleWindow.AccountNumber}",
+                "Rule Added",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            RulesWindow rulesWindow = new RulesWindow(glMapper.mappingRules) { Owner = this };
+
+            rulesWindow.Show();
+        }
     }
 }

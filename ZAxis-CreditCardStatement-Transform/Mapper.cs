@@ -78,7 +78,6 @@ namespace ZAxis_CreditCardStatement_Transform
                 {
                     continue; 
                 }
-
                 string[] parts = line.Split(',');
                 if (parts.Length == 2)
                 {
@@ -95,7 +94,6 @@ namespace ZAxis_CreditCardStatement_Transform
                     }
                 }
             }
-
             return true;
         }
 
@@ -136,7 +134,7 @@ namespace ZAxis_CreditCardStatement_Transform
             addRule("", "ULINE", GLAccounts.ShippingSuppliesExpense);
         }
 
-        private void addRule(
+        public void addRule(
             string cardNumber,
             string descriptionKeyword,
             GLAccount account, 
